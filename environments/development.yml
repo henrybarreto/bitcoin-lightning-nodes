@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  restartPolicy: Always 
+  volumes:
+  - name: app
+    hostPath:
+      path: ./  
+      type: Directory
+  - name: data
+    hostPath:
+      path: ./data
+      type: Directory
+  containers:
+  - name: database
+    image: docker.io/mysql:9
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "password"
+    - name: MYSQL_USER
+      value: "app"
+    - name: MYSQL_PASSWORD
+      value: "password"
+    - name: MYSQL_DATABASE
+      value: "app"
+    ports:
+    - containerPort: 3306
+    volumeMounts:
+    - name: data
+      mountPath: "/var/lib/mysql"
+  - name: server
+    image: server
+    command:
+      - "environments/server/entrypoint.sh"
+    env:
+    - name: LISTEN_ADDRESS
+      value: "0.0.0.0"
+    - name: LISTEN_PORT
+      value: "8080"
+    - name: DATABASE_URL
+      value: "mysql://app:password@database/app"
+    - name: DATABASE_POOL_SIZE
+      value: "5"
+    ports:
+    - containerPort: 8080
+      hostIP: 0.0.0.0
+      hostPort: 8080
+    volumeMounts:
+    - name: app
+      mountPath: "/app"

@@ -1,0 +1,6 @@
+CREATE TABLE nodes (
+  public_key VARCHAR(66) NOT NULL PRIMARY KEY,
+  alias VARCHAR(255) NOT NULL,
+  capacity VARCHAR(255) NOT NULL,
+  first_seen VARCHAR(255) NOT NULL
+);

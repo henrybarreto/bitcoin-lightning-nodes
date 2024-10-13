@@ -1,0 +1,19 @@
+FROM docker.io/rust:1.81 AS build
+
+RUN mkdir /app
+
+WORKDIR /app
+
+RUN apt update -y
+
+RUN cargo install sqlx-cli
+
+VOLUME [ "/app" ]
+
+COPY ./ /app/
+
+FROM build as development
+
+EXPOSE 8080
+
+ENTRYPOINT [ "environments/server/entrypoint.sh" ]
