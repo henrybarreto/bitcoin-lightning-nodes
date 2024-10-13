@@ -24,3 +24,8 @@ async fn get_nodes(data: web::Data<database::Database>) -> web::Json<Vec<databas
         Err(_) => web::Json(Vec::new()),
     };
 }
+
+#[get("/healthcheck")]
+async fn healthcheck() -> web::Json<()> {
+    return web::Json(());
+}

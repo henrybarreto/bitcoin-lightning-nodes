@@ -131,6 +131,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(database.clone()))
             .service(handler::get_nodes)
+            .service(handler::healthcheck)
     })
     .bind((listen_address, listen_port))?
     .run()
